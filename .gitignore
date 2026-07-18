@@ -1,0 +1,35 @@
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Credentials
+credentials.json
+gmail_credentials.json
+token.json
+gmail_token.json
+*.pem
+
+# Resumes (user content)
+resumes/*
+!resumes/.gitkeep

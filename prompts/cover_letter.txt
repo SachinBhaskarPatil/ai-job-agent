@@ -1,0 +1,2 @@
+# Placeholder for cover_letter prompt template.
+# Implement prompt content when building functionality.

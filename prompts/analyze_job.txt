@@ -1,0 +1,2 @@
+# Placeholder for analyze_job prompt template.
+# Implement prompt content when building functionality.

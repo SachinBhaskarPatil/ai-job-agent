@@ -1,0 +1,60 @@
+name: AI Job Agent
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write Google credentials
+        env:
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+        run: echo "$GOOGLE_CREDENTIALS_JSON" > credentials.json
+
+      - name: Write Gmail credentials
+        env:
+          GMAIL_CREDENTIALS_JSON: ${{ secrets.GMAIL_CREDENTIALS_JSON }}
+        run: echo "$GMAIL_CREDENTIALS_JSON" > gmail_credentials.json
+
+      - name: Write Gmail token
+        env:
+          GMAIL_TOKEN_JSON: ${{ secrets.GMAIL_TOKEN_JSON }}
+        run: echo "$GMAIL_TOKEN_JSON" > gmail_token.json
+
+      - name: Write resume PDF
+        env:
+          RESUME_B64: ${{ secrets.RESUME_B64 }}
+        run: |
+          mkdir -p resumes
+          echo "$RESUME_B64" | base64 -d > resumes/resume.pdf
+
+      - name: Run AI Job Agent
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
+          GOOGLE_SHEET_NAME: ${{ secrets.GOOGLE_SHEET_NAME }}
+          GOOGLE_SHEETS_WORKSHEET_NAME: ${{ secrets.GOOGLE_SHEETS_WORKSHEET_NAME }}
+          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
+          GMAIL_CREDENTIALS_PATH: gmail_credentials.json
+          GMAIL_TOKEN_PATH: gmail_token.json
+          GMAIL_SENDER_EMAIL: ${{ secrets.GMAIL_SENDER_EMAIL }}
+          RESUME_PATH: resumes/resume.pdf
+          LOG_LEVEL: INFO
+        run: python main.py

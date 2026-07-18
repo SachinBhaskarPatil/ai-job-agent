@@ -1,0 +1,2 @@
+# Placeholder for tailor_resume prompt template.
+# Implement prompt content when building functionality.
