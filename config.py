@@ -80,7 +80,7 @@ def get_settings() -> Settings:
     return Settings(
         openai=OpenAIConfig(
             api_key=_require_env("OPENAI_API_KEY"),
-            model=os.getenv("OPENAI_MODEL", "gpt-4o"),
+            model=os.getenv("OPENAI_MODEL", "").strip() or "gpt-4o",
         ),
         sheets=GoogleSheetsConfig(
             spreadsheet_id=spreadsheet_id,

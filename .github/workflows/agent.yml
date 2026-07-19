@@ -42,12 +42,17 @@ jobs:
           RESUME_B64: ${{ secrets.RESUME_B64 }}
         run: |
           mkdir -p resumes
-          echo "$RESUME_B64" | base64 -d > resumes/resume.pdf
+          if [ -n "$RESUME_B64" ]; then
+            echo "$RESUME_B64" | base64 -d > resumes/resume.pdf
+            echo "Resume written ($(stat -c%s resumes/resume.pdf) bytes)"
+          else
+            echo "RESUME_B64 secret is empty; skipping resume attachment"
+          fi
 
       - name: Run AI Job Agent
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          OPENAI_MODEL: gpt-4o
           GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
           GOOGLE_SHEET_NAME: ${{ secrets.GOOGLE_SHEET_NAME }}
           GOOGLE_SHEETS_WORKSHEET_NAME: ${{ secrets.GOOGLE_SHEETS_WORKSHEET_NAME }}
